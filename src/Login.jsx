@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-
+import { BrowserRouter as useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function CreateBlog() {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -17,9 +17,13 @@ export default function CreateBlog() {
       setEmail('');
       setPassword('');
       console.log(response.data);
+      localStorage.setItem('blog-auth-token', response.data.token);
+
+      const navigate = useNavigate();
+      navigate(`/`, { replace: true });
     })
     .catch((error) => {
-         if (error.response && error.response.status === 422) {
+         if (error.response && (error.response.status === 422 || error.response.status === 401)) {
           
             setErrors(error.response.data.errors);
             console.log(error.response.data.errors);
@@ -29,27 +33,24 @@ export default function CreateBlog() {
      
   }
   useEffect(() => {
-      if (errors.title) {
-        document.getElementById("title").style.outline = "2px solid red";
+      if (errors.email) {
+        document.getElementById("email").style.outline = "2px solid red";
+        setPassword('');
       } else {
-        document.getElementById("title").style.outline = "none";
+        document.getElementById("email").style.outline = "none";
       }
-      if (errors.author) {
-        document.getElementById("author").style.outline = "2px solid red";
-      } else {
-        document.getElementById("author").style.outline = "none";
-      }
+      
     }, [errors]);
 
   return (
     <div>
       <div>
         <label>Email</label>
-        <input type="email" value={email} id="title" className="form-control" name="email" onChange={(e) => setTitle(e.target.value)}/>
+        <input type="email" value={email} id="email" className="form-control" name="email" onChange={(e) => setEmail(e.target.value)}/>
       </div>
       <div>
         <label>Password</label>
-         <input type="password" value={password} id="title" className="form-control" name="password" onChange={(e) => setTitle(e.target.value)}/>
+         <input type="password" value={password} id="password" className="form-control" name="password" onChange={(e) => setPassword(e.target.value)}/>
         <p style={{ color: "red" }}>{errors.content}</p>
       </div>
       <div>
