@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import axios from "axios";
-
+import BlogCard from "./BlogCard";
 export default function BlogList() {
   const [blogs, setBlogs] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -42,13 +42,9 @@ export default function BlogList() {
       <div className="row">
         {blogs.map((blog) => (
           <div key={blog.id} className="col-2 mx-2 border rounded mb-2">
-            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-            <p>
-              Created at{" "}
-              {new Date(blog.created_at).toLocaleString("en-GB", {
-                hour12: false,
-              })}
-            </p>
+             {/* <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>  */}
+            <BlogCard blog={blog} />
+            
           </div>
         ))}
       </div>
